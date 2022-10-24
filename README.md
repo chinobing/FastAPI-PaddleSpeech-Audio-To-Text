@@ -15,6 +15,12 @@
 - PaddleSpeech 用于音频转换
 - Celery 用于后台任务
 
+## 运行
+终端下直接输入以下命令即可
+```
+docker-compose up -d --build
+```
+
 ## demo
 ![](demo.jpg)
 
