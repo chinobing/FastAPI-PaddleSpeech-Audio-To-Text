@@ -1,0 +1,11 @@
+aiofiles==22.1.0
+celery==4.4.7
+fastapi==0.85.1
+ffmpeg-python==0.2.0
+pandas==1.5.1
+SQLAlchemy==1.4.41
+uvicorn==0.18.3
+redis==4.3.4
+Jinja2==3.1.2
+python-multipart==0.0.5
+eventlet==0.33.1

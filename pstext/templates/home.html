@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PaddleSpeech 录音转文字</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', path='/dropzone.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/semantic.min.css') }}">
+    <script src="{{ url_for('static', path='/dropzone.min.js') }}"></script>
+    <script src="{{ url_for('static', path='/jquery-3.5.1/jquery-3.5.1.min.js') }}"></script>
+    <script src="{{ url_for('static', path='/semantic.min.js') }}"></script>
+    <script type="text/javascript">
+      Dropzone.options.myDropzone = {
+      // Prevents Dropzone from uploading dropped files immediately
+        dictDefaultMessage: "拖动语音文件到这里并上传",
+        dictInvalidFileType: "只能上传*.wav, *.mp3, *.m4a等音频格式",
+        dictResponseError: "Server responded with {{statusCode}} code.",
+
+        acceptedFiles: "audio/*",
+
+        url: "{{ url_for('upload_files') }}",
+        autoProcessQueue: true,
+        uploadMultiple: false,
+        parallelUploads: 10,
+        maxFiles: 10,
+          init: function() {
+            this.on("successmultiple", files => {
+              console.log("A file has been added");
+            });
+          }
+      };
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#filter").click(function () {
+                const title = $("#audio").val();
+                window.location.href = "http://" + window.location.host + "/?title=" + title;
+            });
+            $("#sync").click(function () {
+                $.get("{{ sync_data_url }}", function (result) {
+                    alert("Message: " + result.message);
+                });
+            });
+        });
+    </script>
+    <style>
+      .dropzone {
+        box-shadow: 0px 2px 20px 0px #f2f2f2;
+        border: 10px;
+        padding: 10x;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+
+
+
+  <body>
+      <div class="ui container">
+        <h1 style="text-align: center">PaddleSpeech 录音转文字</h1>
+        <h2></h2>
+        <form action="{{ url_for('upload_files') }}" class="dropzone" id="my-dropzone" method="POST">
+        </form>
+
+        <button id="filter" style="float: left" type="submit" class="ui button alert-secondary">更新进度/过滤文件</button>
+        <div class="ui input">
+            <label for="audio"></label><input id="audio" type="text" placeholder="语音名称" value="">
+        </div>
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>语音名称</th>
+                <th>语音大小</th>
+                <th>语音类型</th>
+                <th>上传时间</th>
+                <th>转换进度</th>
+                <th>文本下载</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for d in data %}
+            <tr>
+                <td>{{ d.id }}</td>
+                <td>{{ d.title }}</td>
+                <td>{{ d.size }}</td>
+                <td>{{ d.extension }}</td>
+                <td>{{ d.created_at }}</td>
+                <td>{{ d.progress * 100 }}%</td>
+                <td>
+                    {% if d.progress > 0 %}
+                    <a class="ui blue button" href="/download/{{ d.id }}">下载</a>
+                    {% else %}
+                    <a class="ui disabled button">下载</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if d.progress == 1 %}
+                    <a class="ui red button" href="/delete/{{ d.id }}">删除</a>
+                    {% else %}
+                    <a class="ui disabled button">删除</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+      </div>
+      <footer class="ui center aligned segment" >
+        <p>&copy; 2022 <a href="https://github.com/chinobing">@chinobing</a></p>
+      </footer>
+  </body>
+</html>
