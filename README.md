@@ -12,7 +12,7 @@
 ## 技术
 - FastAPI 用于前端网页
 - FFmpeg 用于转换、分割音频
-- PaddleSpeech 用于音频转换
+- [PaddleSpeech](https://github.com/PaddlePaddle/PaddleSpeech) 用于音频转换
 - Celery 用于后台任务
 
 ## 运行
